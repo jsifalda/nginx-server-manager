@@ -1,0 +1,139 @@
+<?php
+
+$options = getopt('n:');
+
+if(!$options){ ?>
+
+Create Nginx virtual host script
+-----------------------
+(Please run as root)
+
+Usage: php createhost.phpc [options]
+
+options:
+	-n 		Name of virtual host
+	
+<?php
+	exit;
+}
+
+/**
+* Create Nginx virtual host php script
+*/
+class NginxServerManager
+{
+
+	private $name;
+
+	private $nginxDir = '/opt/local/etc/nginx/sites-enabled';
+
+	private $serverRoot = __DIR__;
+	
+	function __construct($options)
+	{
+		if(!isset($options['n'])){
+			throw new Exception("Bad parameters exception");
+			
+		}else{
+			$this->name = $options['n'];
+		}
+	}
+
+	public function setNginxDirectory($nginxDir)
+	{
+		$this->nginxDir = (string) $nginxDir;
+	}
+
+	public function setServerRootDirecotry($serverRoot)
+	{
+		$this->serverRoot = (string) $serverRoot;
+	}
+
+	private function writeToConsole($message, $type = 'succes')
+	{
+		echo PHP_EOL . $message;
+	}
+
+	private function getContentOfServerConfigFile()
+	{
+		return '
+			server { ' . PHP_EOL .
+			    'listen 80; ' . PHP_EOL .
+			    'listen [::]:80; ' . PHP_EOL .
+			    'server_name ' . $this->name . '; ' . PHP_EOL .
+			    PHP_EOL .
+			    'root /nginx/' . $this->name . '/; ' . PHP_EOL .
+			    PHP_EOL .
+			    'include common; ' . PHP_EOL .
+			    'include php; ' . PHP_EOL .
+			    'include nette; ' . PHP_EOL .
+			'}';
+	}
+
+	private function createServerConfigFile()
+	{
+		$filename = $this->nginxDir . DIRECTORY_SEPARATOR . $this->name . '.conf';
+
+		if(file_put_contents($filename, $this->getContentOfServerConfigFile())){
+			$this->writeToConsole('1. Config file was successful created.');
+		}else{
+			$this->writeToConsole('1. Config file was not successful created.');
+		}
+	}
+
+	private function addToHostFile()
+	{
+		$hostsFile = '/etc/hosts';
+		$text = PHP_EOL . '127.0.0.1 	'. $this->name;
+
+		if(file_put_contents($hostsFile, $text, FILE_APPEND)){
+			$this->writeToConsole('2. Host for ' . $this->name . ' was added.');
+		}else{
+			$this->writeToConsole('2. Host for ' . $this->name . ' was not added.');
+		}
+	}
+
+	private function restartNginxServer()
+	{
+		
+		$this->writeToConsole('3. Restart nginx server');
+
+		shell_exec('nginx -s stop && nginx');	
+	}
+
+	private function createDirForProject()
+	{
+		$serverFolder = $this->serverRoot . DIRECTORY_SEPARATOR . $this->name;
+
+		if(!$this->fileExist($serverFolder)){
+			mkdir($serverFolder);
+		}
+
+		$this->writeToConsole('4. Created project folder in root directory.');
+	}
+
+	public function exec()
+	{
+		if(!$this->fileExist($this->nginxDir)){
+			throw new Exception("Bad nginx directory path");
+			
+		}else{
+			$this->createServerConfigFile();
+			$this->addToHostFile();
+			$this->restartNginxServer();
+			$this->createDirForProject();
+
+			$this->writeToConsole('Finish');
+		}
+	}
+
+	private function fileExist($file)
+	{
+		return file_exists($file);
+	}
+}
+
+$manager = new NginxServerManager($options);
+$manager->setServerRootDirecotry(__DIR__ . '/..');
+$manager->exec();
+
