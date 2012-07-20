@@ -116,8 +116,8 @@ class NginxServerManager
 		$logDir = $serverFolder . DIRECTORY_SEPARATOR . 'log';
 
 
-		if(!$this->fileExist($serverFolder)){
-			mkdir($serverFolder);
+		if(!$this->fileExist($logDir)){
+			mkdir($logDir);
 		}
 
 		$this->writeToConsole('4. Created project folder in root directory.');
