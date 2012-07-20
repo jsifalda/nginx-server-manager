@@ -51,7 +51,7 @@ class NginxServerManager
 
 	private function writeToConsole($message, $type = 'succes')
 	{
-		echo PHP_EOL . $message;
+		echo $message . PHP_EOL;
 	}
 
 	private function getContentOfServerConfigFile()
@@ -63,6 +63,10 @@ class NginxServerManager
 			    'server_name ' . $this->name . '; ' . PHP_EOL .
 			    PHP_EOL .
 			    'root /nginx/' . $this->name . '/; ' . PHP_EOL .
+			    PHP_EOL .
+			    'error_log /nginx/' . $this->name . '/log/ crit;' .
+			    PHP_EOL . 
+			    'access_log   /nginx/' . $this->name . '/log/' . $this->name . '.access_log;' . 
 			    PHP_EOL .
 			    'include common; ' . PHP_EOL .
 			    'include php; ' . PHP_EOL .
@@ -104,6 +108,13 @@ class NginxServerManager
 	private function createDirForProject()
 	{
 		$serverFolder = $this->serverRoot . DIRECTORY_SEPARATOR . $this->name;
+
+		if(!$this->fileExist($serverFolder)){
+			mkdir($serverFolder);
+		}
+
+		$logDir = $serverFolder . DIRECTORY_SEPARATOR . 'log';
+
 
 		if(!$this->fileExist($serverFolder)){
 			mkdir($serverFolder);
