@@ -56,21 +56,22 @@ class NginxServerManager
 
 	private function getContentOfServerConfigFile()
 	{
+		$path = '/Users/jsifalda/nginx/';
+
 		return '
 			server { ' . PHP_EOL .
 			    'listen 80; ' . PHP_EOL .
 			    'listen [::]:80; ' . PHP_EOL .
 			    'server_name ' . $this->name . '; ' . PHP_EOL .
 			    PHP_EOL .
-			    'root /nginx/' . $this->name . '/; ' . PHP_EOL .
+			    'root ' . $path . $this->name . '/; ' . PHP_EOL .
 			    PHP_EOL .
-			    'error_log /nginx/' . $this->name . '/log/ crit;' .
-			    PHP_EOL . 
-			    'access_log   /nginx/' . $this->name . '/log/' . $this->name . '.access_log;' . 
+			    'error_log ' . $path . $this->name . '/log/server.error_log crit;' . PHP_EOL .
+			    'access_log ' . $path . $this->name . '/log/' . $this->name . '.access_log;' . 
 			    PHP_EOL .
-			    'include common; ' . PHP_EOL .
-			    'include php; ' . PHP_EOL .
-			    'include nette; ' . PHP_EOL .
+			    'include common.conf; ' . PHP_EOL .
+			    'include php.conf; ' . PHP_EOL .
+			    'include nette.conf; ' . PHP_EOL .
 			'}';
 	}
 
@@ -79,9 +80,9 @@ class NginxServerManager
 		$filename = $this->nginxDir . DIRECTORY_SEPARATOR . $this->name . '.conf';
 
 		if(file_put_contents($filename, $this->getContentOfServerConfigFile())){
-			$this->writeToConsole('1. Config file was successful created.');
+			$this->writeToConsole('2. Config file was successful created.');
 		}else{
-			$this->writeToConsole('1. Config file was not successful created.');
+			$this->writeToConsole('2. Config file was not successful created.');
 		}
 	}
 
@@ -91,27 +92,32 @@ class NginxServerManager
 		$text = PHP_EOL . '127.0.0.1 	'. $this->name;
 
 		if(file_put_contents($hostsFile, $text, FILE_APPEND)){
-			$this->writeToConsole('2. Host for ' . $this->name . ' was added.');
+			$this->writeToConsole('3. Host for ' . $this->name . ' was added.');
 		}else{
-			$this->writeToConsole('2. Host for ' . $this->name . ' was not added.');
+			$this->writeToConsole('3. Host for ' . $this->name . ' was not added.');
 		}
 	}
 
 	private function restartNginxServer()
 	{
 		
-		$this->writeToConsole('3. Restart nginx server');
+		$this->writeToConsole('4. Restart nginx server');
 
-		shell_exec('nginx -s stop && nginx');	
+		shell_exec('sudo nginx -s stop');
+		shell_exec('sudo nginx');
 	}
 
 	private function createDirForProject()
 	{
+		$this->writeToConsole('1. Creating projects folder in root directory.');
+
 		$serverFolder = $this->serverRoot . DIRECTORY_SEPARATOR . $this->name;
 
 		if(!$this->fileExist($serverFolder)){
 			mkdir($serverFolder);
 		}
+
+		shell_exec('sudo chmod -R 777 ' . $serverFolder);
 
 		$logDir = $serverFolder . DIRECTORY_SEPARATOR . 'log';
 
@@ -120,7 +126,7 @@ class NginxServerManager
 			mkdir($logDir);
 		}
 
-		$this->writeToConsole('4. Created project folder in root directory.');
+		shell_exec('sudo chmod -R 777 ' . $logDir);
 	}
 
 	public function exec()
@@ -129,10 +135,10 @@ class NginxServerManager
 			throw new Exception("Bad nginx directory path");
 			
 		}else{
+			$this->createDirForProject();
 			$this->createServerConfigFile();
 			$this->addToHostFile();
 			$this->restartNginxServer();
-			$this->createDirForProject();
 
 			$this->writeToConsole('Finish');
 		}
