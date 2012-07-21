@@ -1,0 +1,51 @@
+<?php
+
+require __DIR__ . '/src/IManager.php';
+require __DIR__ . '/src/NginxServerManager.php';
+require __DIR__ . '/src/CreateServer.php';
+require __DIR__ . '/src/RemoveServer.php';
+
+$options = getopt('n:x:s:rd');
+
+if(!$options){ ?>
+
+Create Nginx virtual host script
+-----------------------
+(Please run as root)
+
+Usage: php createhost.phpc [options]
+
+options:
+	-n      	Name of virtual host
+	-x<path>    Nginx root dir. (Path to nginx config dir)
+	-s<path>    Server root dir (Path to your server folders)
+	-r          Remove server with source code?
+	-d          Remove server?
+	
+<?php
+	exit;
+}
+
+if(!isset($options['n']) or empty($options['n'])){
+	echo 'Parameter -n is required.';
+}else{
+	if(isset($options['d']) and !$options['d']){
+		$remove = new RemoveServer($options['n']);
+		if(isset($options['x'])) $remove->setNginxDir($options['x']);
+		if(isset($options['s'])) $remove->setServerDir($options['s']);
+		$remove->exec();
+
+	}elseif(isset($options['r']) and !$options['r']){
+		$remove = new RemoveServer($options['n'], true);
+		if(isset($options['x'])) $remove->setNginxDir($options['x']);
+		if(isset($options['s'])) $remove->setServerDir($options['s']);
+		$remove->exec();
+
+	}else{
+		$create = new CreateServer($options['n']);
+		if(isset($options['x'])) $create->setNginxDir($options['x']);
+		if(isset($options['s'])) $create->setServerDir($options['s']);
+		$create->exec();
+	}
+}
+
