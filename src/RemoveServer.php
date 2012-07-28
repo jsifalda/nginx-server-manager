@@ -25,7 +25,7 @@ class RemoveServer extends NginxServerManager implements IManager
 	{
 		parent::__construct();
 
-		$this->name = $name;
+		$this->name = str_replace('/', '', $name);
 		$this->removeWithSource = $forceRemove;
 	}
 
@@ -60,10 +60,10 @@ class RemoveServer extends NginxServerManager implements IManager
 		$this->writeToConsole('1. Removing server config file');
 
 		$filename = $this->nginxDir . '/' . $this->name . '.conf';
-
+		
 		if($this->fileExist($filename)){
 			return unlink($filename);
-//			return shell_exec('sudo rm -rf '.$filename);
+			//return shell_exec('sudo rm -rf '.$filename);
 		}
 
 		return true;
@@ -77,7 +77,7 @@ class RemoveServer extends NginxServerManager implements IManager
 
 		if($this->fileExist($path))
 		{
-//			return unlink($path);
+			// return unlink($path);
 			return shell_exec('sudo rm -rf ' . $path);
 		}
 

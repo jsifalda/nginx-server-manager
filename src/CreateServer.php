@@ -23,7 +23,7 @@ class CreateServer extends NginxServerManager
 	{
 		parent::__construct();
 
-		$this->name = $name;
+		$this->name = str_replace('/', '', $name);
 	}
 
 	public function setNginxDir($dir)
