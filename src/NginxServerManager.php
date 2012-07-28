@@ -19,7 +19,7 @@ abstract class NginxServerManager extends stdClass
 	public function __construct()
 	{
 		$this->nginxDir = '/opt/local/etc/nginx/sites-enabled';
-		$this->serverDir = __DIR__ . '/../..';
+		$this->serverDir = ROOT;
 		$this->hostFile = '/etc/hosts';
 	}
 
@@ -37,6 +37,15 @@ abstract class NginxServerManager extends stdClass
 	protected function fileExist($file)
 	{
 		return file_exists($file);
+	}
+
+	protected function createDirectory($pathname)
+	{
+		if(!$this->fileExist($pathname)){
+			mkdir($pathname);
+		}
+
+		shell_exec('sudo chmod -R 777 ' . $pathname	);
 	}
 
 }

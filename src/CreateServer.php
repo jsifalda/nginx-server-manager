@@ -46,7 +46,7 @@ class CreateServer extends NginxServerManager
 			'listen [::]:80; ' . PHP_EOL .
 			'server_name ' . $this->name . '; ' . PHP_EOL .
 			PHP_EOL .
-			'root ' . $path . '/' . $this->name . '/; ' . PHP_EOL .
+			'root ' . $path . '/' . $this->name . '/www/; ' . PHP_EOL .
 			PHP_EOL .
 			'error_log ' . $path . '/' . $this->name . '/log/server.error_log crit;' . PHP_EOL .
 			'access_log ' . $path . '/' . $this->name . '/log/' . $this->name . '.access_log;' .
@@ -89,21 +89,15 @@ class CreateServer extends NginxServerManager
 		$this->writeToConsole('1. Creating projects folder in root directory.');
 
 		$serverFolder = $this->serverDir . DIRECTORY_SEPARATOR . $this->name;
-
-		if(!$this->fileExist($serverFolder)){
-			mkdir($serverFolder);
-		}
-
-		shell_exec('sudo chmod -R 777 ' . $serverFolder);
+		$this->createDirectory($serverFolder);
 
 		$logDir = $serverFolder . DIRECTORY_SEPARATOR . 'log';
+		$this->writeToConsole('		- Creating log dir');
+		$this->createDirectory($logDir);
 
-
-		if(!$this->fileExist($logDir)){
-			mkdir($logDir);
-		}
-
-		shell_exec('sudo chmod -R 777 ' . $logDir	);
+		$wwwDir = $serverFolder . DIRECTORY_SEPARATOR . 'www';
+		$this->writeToConsole('		- Creating www dir');
+		$this->createDirectory($wwwDir);
 	}
 
 	protected function restartNginxServer()

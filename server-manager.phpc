@@ -1,9 +1,11 @@
 <?php
 
-require __DIR__ . '/src/IManager.php';
-require __DIR__ . '/src/NginxServerManager.php';
-require __DIR__ . '/src/CreateServer.php';
-require __DIR__ . '/src/RemoveServer.php';
+define('ROOT', __DIR__);
+
+require ROOT . '/src/IManager.php';
+require ROOT . '/src/NginxServerManager.php';
+require ROOT . '/src/CreateServer.php';
+require ROOT . '/src/RemoveServer.php';
 
 $options = getopt('n:x:s:rd');
 
