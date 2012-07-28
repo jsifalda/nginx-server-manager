@@ -48,7 +48,7 @@ class CreateServer extends NginxServerManager
 			PHP_EOL .
 			'root ' . $path . '/' . $this->name . '/www/; ' . PHP_EOL .
 			PHP_EOL .
-			'error_log ' . $path . '/' . $this->name . '/log/server.error_log crit;' . PHP_EOL .
+			'error_log ' . $path . '/' . $this->name . '/log/server.error_log;' . PHP_EOL .
 			'access_log ' . $path . '/' . $this->name . '/log/' . $this->name . '.access_log;' .
 			PHP_EOL .
 			'include common.conf; ' . PHP_EOL .
