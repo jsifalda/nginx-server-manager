@@ -40,8 +40,7 @@ class CreateServer extends NginxServerManager
 	{
 		$path = $this->serverDir;
 
-		return '
-			server { ' . PHP_EOL .
+		return 'server { ' . PHP_EOL .
 			'listen 80; ' . PHP_EOL .
 			'listen [::]:80; ' . PHP_EOL .
 			'server_name ' . $this->name . '; ' . PHP_EOL .
