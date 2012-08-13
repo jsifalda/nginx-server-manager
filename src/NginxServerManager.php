@@ -18,7 +18,7 @@ abstract class NginxServerManager extends stdClass
 
 	public function __construct()
 	{
-		$this->nginxDir = '/opt/local/etc/nginx/sites-enabled';
+		$this->nginxDir = '/usr/local/etc/nginx/sites-enabled';
 		$this->serverDir = ROOT;
 		$this->hostFile = '/etc/hosts';
 	}

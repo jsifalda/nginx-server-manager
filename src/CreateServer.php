@@ -42,7 +42,6 @@ class CreateServer extends NginxServerManager
 
 		return 'server { ' . PHP_EOL .
 			'listen 80; ' . PHP_EOL .
-			'listen [::]:80; ' . PHP_EOL .
 			'server_name ' . $this->name . '; ' . PHP_EOL .
 			PHP_EOL .
 			'root ' . $path . '/' . $this->name . '/www/; ' . PHP_EOL .
@@ -50,9 +49,9 @@ class CreateServer extends NginxServerManager
 			'error_log ' . $path . '/' . $this->name . '/log/server.error_log;' . PHP_EOL .
 			'access_log ' . $path . '/' . $this->name . '/log/' . $this->name . '.access_log;' .
 			PHP_EOL .
-			'include common.conf; ' . PHP_EOL .
-			'include php.conf; ' . PHP_EOL .
-			'include nette.conf; ' . PHP_EOL .
+			'include common/common.conf; ' . PHP_EOL .
+			'include common/php.conf; ' . PHP_EOL .
+			'include common/nette.conf; ' . PHP_EOL .
 			'}';
 	}
 
