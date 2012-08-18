@@ -9,7 +9,7 @@
 
 ## Usage
 	
-	sudo php <path>/createhost.phpc -n <name-of-new-server>
+	sudo php <path>/server-manager.phpc -n <name-of-new-server>
 
 **SUDO** is required!
 
