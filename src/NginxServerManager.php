@@ -30,8 +30,9 @@ abstract class NginxServerManager extends stdClass
 
 	protected function restartNginxServer()
 	{
-		shell_exec('sudo nginx -s stop');
-		shell_exec('sudo nginx');
+		// shell_exec('sudo nginx -s stop');
+		// shell_exec('sudo nginx');
+		shell_exec('sudo nginx -s reload');
 	}
 
 	protected function fileExist($file)
