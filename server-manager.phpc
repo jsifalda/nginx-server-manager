@@ -29,7 +29,7 @@ options:
 }
 
 if(!isset($options['n']) or empty($options['n'])){
-	echo 'Parameter -n is required.';
+	echo 'Parameter -n is required.' . PHP_EOL;
 }else{
 	if(isset($options['d']) and !$options['d']){
 		$remove = new RemoveServer($options['n']);
