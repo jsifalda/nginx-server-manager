@@ -1,5 +1,7 @@
 # NGINX server manager
 
+##Development is stopped. Please visit new version: [nginx-server-manager-bash](https://github.com/jsifalda/nginx-server-manager-bash)
+
 **PHP script (used from command line) for fast creating virtual host in nginx server**
 
 ##Installing
